@@ -11,13 +11,15 @@ concurrency:
 permissions: write-all
 env: 
   LINK: 'https://ziglang.org/builds/zig-linux-x86_64-0.14.0-dev.2847+db8ed730e.tar.xz'
-  ZIP: 'zig-0.14.0-dev.2851+b074fb7dd.tar.xz'
+  SOURCE: 'zig-0.14.0-dev.2851+b074fb7dd.tar.xz'
 jobs:
   creatTag:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4.2.2
+    - if: env.ENV == 1
+      uses: actions/checkout@v4.2.2
     - name: Create a new tag
+      if: env.ENV == 1
       run: |
         TAG_NAME="nightly"
         git tag $TAG_NAME
@@ -33,7 +35,8 @@ jobs:
         tar -xf zig.tar.xz && rm zig.tar.xz
         mv * zig && cd zig && mkdir bin && mv zig bin && export PATH=$PATH:$PWD/bin
         cd ../..
-        unzip ZIP
+        mkdir tmp && cd tmp && mv ../$SOURCE . && tar -xf $SOURCE
+        rm $SOURCE && mv * zig && mv zig/* .. && cd ..
         zig build --help
   x1c_Fast:
     runs-on: ubuntu-latest
@@ -51,7 +54,8 @@ jobs:
         tar -xf zig.tar.xz && rm zig.tar.xz
         mv * zig && cd zig && mkdir bin && mv zig bin && export PATH=$PATH:$PWD/bin
         cd ../..
-        unzip ZIP
+        mkdir tmp && cd tmp && mv ../$SOURCE . && tar -xf $SOURCE
+        rm $SOURCE && mv * zig && mv zig/* .. && cd ..
         zig build -Doptimize=ReleaseFast -Dcpu="cortex_x1c" -Dstrip=true -Dtarget="aarch64-linux-musl" -Dvalue-interpret-mode=direct -fno-reference-trace -Dskip-debug -Dvalue-tracing=false --zig-lib-dir "$PWD/.zig/zig/lib" --search-prefix "$PWD/.zig/zig"
     - name: achive
       run: |
@@ -99,7 +103,8 @@ jobs:
         tar -xf zig.tar.xz && rm zig.tar.xz
         mv * zig && cd zig && mkdir bin && mv zig bin && export PATH=$PATH:$PWD/bin
         cd ../..
-        unzip ZIP
+        mkdir tmp && cd tmp && mv ../$SOURCE . && tar -xf $SOURCE
+        rm $SOURCE && mv * zig && mv zig/* .. && cd ..
         zig build -Doptimize=ReleaseSmall -Dcpu="cortex_x1c" -Dstrip=true -Dtarget="aarch64-linux-musl" -Dvalue-interpret-mode=direct -fno-reference-trace -Dskip-debug -Dvalue-tracing=false --zig-lib-dir "$PWD/.zig/zig/lib" --search-prefix "$PWD/.zig/zig"
     - name: achive
       run: |
@@ -147,7 +152,8 @@ jobs:
         tar -xf zig.tar.xz && rm zig.tar.xz
         mv * zig && cd zig && mkdir bin && mv zig bin && export PATH=$PATH:$PWD/bin
         cd ../..
-        unzip ZIP
+        mkdir tmp && cd tmp && mv ../$SOURCE . && tar -xf $SOURCE
+        rm $SOURCE && mv * zig && mv zig/* .. && cd ..
         zig build -Doptimize=ReleaseFast -Dcpu="kryo" -Dstrip=true -Dtarget="aarch64-linux-musl" -Dvalue-interpret-mode=direct -Ddev=full -fno-reference-trace -Dskip-debug -Dvalue-tracing=false --zig-lib-dir "$PWD/.zig/zig/lib" --search-prefix "$PWD/.zig/zig"
     - name: achive
       run: |
@@ -195,7 +201,8 @@ jobs:
         tar -xf zig.tar.xz && rm zig.tar.xz
         mv * zig && cd zig && mkdir bin && mv zig bin && export PATH=$PATH:$PWD/bin
         cd ../..
-        unzip ZIP
+        mkdir tmp && cd tmp && mv ../$SOURCE . && tar -xf $SOURCE
+        rm $SOURCE && mv * zig && mv zig/* .. && cd ..
         zig build -Doptimize=ReleaseSmall -Dcpu="kryo" -Dstrip=true -Dtarget="aarch64-linux-musl" -Dvalue-interpret-mode=direct -fno-reference-trace -Dskip-debug -Dvalue-tracing=false --zig-lib-dir "$PWD/.zig/zig/lib" --search-prefix "$PWD/.zig/zig"
     - name: achive
       run: |
@@ -243,7 +250,8 @@ jobs:
         tar -xf zig.tar.xz && rm zig.tar.xz
         mv * zig && cd zig && mkdir bin && mv zig bin && export PATH=$PATH:$PWD/bin
         cd ../..
-        unzip ZIP
+        mkdir tmp && cd tmp && mv ../$SOURCE . && tar -xf $SOURCE
+        rm $SOURCE && mv * zig && mv zig/* .. && cd ..
         zig build -Doptimize=ReleaseFast -Dcpu="baseline" -Dstrip=true -Dtarget="aarch64-linux-musl" -Dvalue-interpret-mode=direct -fno-reference-trace -Dskip-debug -Dvalue-tracing=false --zig-lib-dir "$PWD/.zig/zig/lib" --search-prefix "$PWD/.zig/zig"
     - name: achive
       run: |
@@ -291,7 +299,8 @@ jobs:
         tar -xf zig.tar.xz && rm zig.tar.xz
         mv * zig && cd zig && mkdir bin && mv zig bin && export PATH=$PATH:$PWD/bin
         cd ../..
-        unzip ZIP
+        mkdir tmp && cd tmp && mv ../$SOURCE . && tar -xf $SOURCE
+        rm $SOURCE && mv * zig && mv zig/* .. && cd ..
         zig build -Doptimize=ReleaseSmall -Dcpu="baseline" -Dstrip=true -Dtarget="aarch64-linux-musl" -Dvalue-interpret-mode=direct -fno-reference-trace -Dskip-debug -Dvalue-tracing=false --zig-lib-dir "$PWD/.zig/zig/lib" --search-prefix "$PWD/.zig/zig"
     - name: achive
       run: |
@@ -343,7 +352,8 @@ jobs:
         tar -xf zig.tar.xz && rm zig.tar.xz
         mv * zig && cd zig && mkdir bin && mv zig bin && export PATH=$PATH:$PWD/bin
         cd ../..
-        unzip ZIP
+        mkdir tmp && cd tmp && mv ../$SOURCE . && tar -xf $SOURCE
+        rm $SOURCE && mv * zig && mv zig/* .. && cd ..
         zig build -Doptimize=ReleaseFast -Dsingle-threaded=true -Dcpu="cortex_x1c" -Dstrip=true -Dtarget="aarch64-linux-musl" -Dvalue-interpret-mode=direct -Ddev=full -fno-reference-trace -Dskip-debug -Dvalue-tracing=false --zig-lib-dir "$PWD/.zig/zig/lib" --search-prefix "$PWD/.zig/zig"
     - name: achive
       run: |
@@ -391,7 +401,8 @@ jobs:
         tar -xf zig.tar.xz && rm zig.tar.xz
         mv * zig && cd zig && mkdir bin && mv zig bin && export PATH=$PATH:$PWD/bin
         cd ../..
-        unzip ZIP
+        mkdir tmp && cd tmp && mv ../$SOURCE . && tar -xf $SOURCE
+        rm $SOURCE && mv * zig && mv zig/* .. && cd ..
         zig build -Doptimize=ReleaseSmall -Dsingle-threaded=true -Dcpu="cortex_x1c" -Dstrip=true -Dtarget="aarch64-linux-musl" -Dvalue-interpret-mode=direct -fno-reference-trace -Dskip-debug -Dvalue-tracing=false --zig-lib-dir "$PWD/.zig/zig/lib" --search-prefix "$PWD/.zig/zig"
     - name: achive
       run: |
@@ -439,7 +450,8 @@ jobs:
         tar -xf zig.tar.xz && rm zig.tar.xz
         mv * zig && cd zig && mkdir bin && mv zig bin && export PATH=$PATH:$PWD/bin
         cd ../..
-        unzip ZIP
+        mkdir tmp && cd tmp && mv ../$SOURCE . && tar -xf $SOURCE
+        rm $SOURCE && mv * zig && mv zig/* .. && cd ..
         zig build -Doptimize=ReleaseFast -Dsingle-threaded=true -Dcpu="kryo" -Dstrip=true -Dtarget="aarch64-linux-musl" -Dvalue-interpret-mode=direct -Ddev=full -fno-reference-trace -Dskip-debug -Dvalue-tracing=false --zig-lib-dir "$PWD/.zig/zig/lib" --search-prefix "$PWD/.zig/zig"
     - name: achive
       run: |
@@ -487,7 +499,8 @@ jobs:
         tar -xf zig.tar.xz && rm zig.tar.xz
         mv * zig && cd zig && mkdir bin && mv zig bin && export PATH=$PATH:$PWD/bin
         cd ../..
-        unzip ZIP
+        mkdir tmp && cd tmp && mv ../$SOURCE . && tar -xf $SOURCE
+        rm $SOURCE && mv * zig && mv zig/* .. && cd ..
         zig build -Doptimize=ReleaseSmall -Dsingle-threaded=true -Dcpu="kryo" -Dstrip=true -Dtarget="aarch64-linux-musl" -Dvalue-interpret-mode=direct -fno-reference-trace -Dskip-debug -Dvalue-tracing=false --zig-lib-dir "$PWD/.zig/zig/lib" --search-prefix "$PWD/.zig/zig"
     - name: achive
       run: |
@@ -535,7 +548,8 @@ jobs:
         tar -xf zig.tar.xz && rm zig.tar.xz
         mv * zig && cd zig && mkdir bin && mv zig bin && export PATH=$PATH:$PWD/bin
         cd ../..
-        unzip ZIP
+        mkdir tmp && cd tmp && mv ../$SOURCE . && tar -xf $SOURCE
+        rm $SOURCE && mv * zig && mv zig/* .. && cd ..
         zig build -Doptimize=ReleaseFast -Dsingle-threaded=true -Dcpu="baseline" -Dstrip=true -Dtarget="aarch64-linux-musl" -Dvalue-interpret-mode=direct -fno-reference-trace -Dskip-debug -Dvalue-tracing=false --zig-lib-dir "$PWD/.zig/zig/lib" --search-prefix "$PWD/.zig/zig"
     - name: achive
       run: |
@@ -583,7 +597,8 @@ jobs:
         tar -xf zig.tar.xz && rm zig.tar.xz
         mv * zig && cd zig && mkdir bin && mv zig bin && export PATH=$PATH:$PWD/bin
         cd ../..
-        unzip ZIP
+        mkdir tmp && cd tmp && mv ../$SOURCE . && tar -xf $SOURCE
+        rm $SOURCE && mv * zig && mv zig/* .. && cd ..
         zig build -Doptimize=ReleaseSmall -Dsingle-threaded=true -Dcpu="baseline" -Dstrip=true -Dtarget="aarch64-linux-musl" -Dvalue-interpret-mode=direct -fno-reference-trace -Dskip-debug -Dvalue-tracing=false --zig-lib-dir "$PWD/.zig/zig/lib" --search-prefix "$PWD/.zig/zig"
     - name: achive
       run: |
@@ -631,7 +646,8 @@ jobs:
         tar -xf zig.tar.xz && rm zig.tar.xz
         mv * zig && cd zig && mkdir bin && mv zig bin && export PATH=$PATH:$PWD/bin
         cd ../..
-        unzip ZIP
+        mkdir tmp && cd tmp && mv ../$SOURCE . && tar -xf $SOURCE
+        rm $SOURCE && mv * zig && mv zig/* .. && cd ..
         zig build -Doptimize=ReleaseSmall -Dstrip=true -Dtarget="x86_64-linux-musl" -Dvalue-interpret-mode=direct -fno-reference-trace -Dskip-debug -Dvalue-tracing=false --zig-lib-dir "$PWD/.zig/zig/lib" --search-prefix "$PWD/.zig/zig"
     - name: achive
       run: |
@@ -679,7 +695,8 @@ jobs:
         tar -xf zig.tar.xz && rm zig.tar.xz
         mv * zig && cd zig && mkdir bin && mv zig bin && export PATH=$PATH:$PWD/bin
         cd ../..
-        unzip ZIP
+        mkdir tmp && cd tmp && mv ../$SOURCE . && tar -xf $SOURCE
+        rm $SOURCE && mv * zig && mv zig/* .. && cd ..
         zig build -Doptimize=ReleaseFast -Dstrip=true -Dtarget="x86_64-linux-musl" -Dvalue-interpret-mode=direct -fno-reference-trace -Dskip-debug -Dvalue-tracing=false --zig-lib-dir "$PWD/.zig/zig/lib" --search-prefix "$PWD/.zig/zig"
     - name: achive
       run: |
